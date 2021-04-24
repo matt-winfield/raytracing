@@ -5,6 +5,7 @@ import { Drawable } from './classes/interfaces/Drawable';
 import { Camera } from './classes/Camera';
 import { Wall } from './classes/Wall';
 import Display from './components/Display/Display';
+import { Color } from './classes/Color';
 
 const displayWidth = (window.innerWidth - 15) / 2;
 const displayHeight = 500;
@@ -72,8 +73,11 @@ function App(): JSX.Element {
 			const y1 = Math.random() * displayHeight;
 			const x2 = Math.random() * displayWidth;
 			const y2 = Math.random() * displayHeight;
+			const red = Math.random() * 255;
+			const green = Math.random() * 255;
+			const blue = Math.random() * 255;
 
-			walls.push(new Wall(x1, y1, x2, y2));
+			walls.push(new Wall(x1, y1, x2, y2, new Color(red, green, blue)));
 		}
 		setOverheadDrawables(drawables => [...drawables, ...walls]);
 

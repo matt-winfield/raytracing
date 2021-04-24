@@ -29,9 +29,9 @@ export class Ray implements Drawable {
 			if (point) {
 				let distance = point.distanceTo(this.position);
 				if (lowest === null) {
-					lowest = new CastedRay(this.position, this.angle, distance);
+					lowest = new CastedRay(this.position, this.angle, distance, wall.color);
 				} else if (lowest.distance > distance) {
-					lowest = new CastedRay(this.position, this.angle, distance);
+					lowest = new CastedRay(this.position, this.angle, distance, wall.color);
 				}
 			}
 		}

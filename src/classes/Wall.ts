@@ -14,9 +14,11 @@ export class Wall implements Drawable {
 	}
 
 	public draw(canvasContext: CanvasRenderingContext2D): void {
+		canvasContext.beginPath();
 		canvasContext.moveTo(this.a.x, this.a.y);
 		canvasContext.lineTo(this.b.x, this.b.y);
-		canvasContext.strokeStyle = "white";
+		canvasContext.strokeStyle = `rgb(${this.color.red}, ${this.color.green}, ${this.color.blue})`;
 		canvasContext.stroke();
+		canvasContext.closePath();
 	}
 }

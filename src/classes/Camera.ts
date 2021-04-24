@@ -66,7 +66,7 @@ export class Camera implements Drawable {
 				const brightness = (this.viewDistance - castRay.distance) / this.viewDistance;
 
 				if (brightness > 0) {
-					const segment = new Segment(segmentWidth * i, brightness * height, segmentWidth + 1, brightness);
+					const segment = new Segment(segmentWidth * i, brightness * height, segmentWidth + 1, castRay.color, brightness);
 					drawables.push(segment);
 				}
 				i++;
