@@ -1,8 +1,13 @@
+import { CastedRay } from "./CastedRay";
 import { Drawable } from "./interfaces/Drawable";
 import { Ray } from "./Ray";
 import { Segment } from "./Segment";
 import { Vector } from "./Vector";
 import { Wall } from "./Wall";
+
+function toRadians(degrees: number): number {
+	return degrees * (Math.PI / 180);
+}
 
 export class Camera implements Drawable {
 	private position: Vector;
@@ -14,6 +19,7 @@ export class Camera implements Drawable {
 	private rays: Ray[] = [];
 	private size: number = 5;
 	private raysToShow: number = 50;
+	private fisheyeCorrection: boolean = true;
 
 	constructor(x: number, y: number, angle: number, fov: number, viewDistance: number, resolution: number, walls: Wall[]) {
 		this.position = new Vector(x, y)
@@ -41,8 +47,18 @@ export class Camera implements Drawable {
 		this.updateRays();
 	}
 
+	public setFov(fov: number): void {
+		this.fov = fov;
+		this.updateRays();
+	}
+
+	public setResolution(resolution: number): void {
+		this.resolution = resolution;
+		this.updateRays();
+	}
+
 	public draw(canvasContext: CanvasRenderingContext2D): void {
-		const fractionToShow = this.rays.length > this.raysToShow ? this.rays.length / this.raysToShow : 1;
+		const fractionToShow = this.rays.length > this.raysToShow ? Math.round(this.rays.length / this.raysToShow) : 1;
 		let i = 0;
 		for (const ray of this.rays) {
 			if (i++ % fractionToShow === 0) {
@@ -63,9 +79,10 @@ export class Camera implements Drawable {
 		for (const ray of this.rays) {
 			const castRay = ray.cast(this.walls);
 			if (castRay) {
-				const brightness = (this.viewDistance - castRay.distance) / this.viewDistance;
+				const distance = this.fisheyeCorrection ? this.getDistanceFromCameraPlane(castRay) : castRay.distance;
 
-				if (brightness > 0) {
+				if (distance < this.viewDistance) {
+					const brightness = Math.abs((this.viewDistance - distance) / this.viewDistance);
 					const segment = new Segment(segmentWidth * i, brightness * height, segmentWidth + 1, castRay.color, brightness);
 					drawables.push(segment);
 				}
@@ -74,6 +91,14 @@ export class Camera implements Drawable {
 		}
 
 		return drawables;
+	}
+
+	public setFisheyeCorrectionEnabled(enabled: boolean): void {
+		this.fisheyeCorrection = enabled;
+	}
+
+	private getDistanceFromCameraPlane(ray: CastedRay): number {
+		return ray.distance * Math.cos(toRadians(ray.angle - this.angle));
 	}
 
 	private updateRays(): void {

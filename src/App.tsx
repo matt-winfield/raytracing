@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { timer } from 'd3-timer';
 import './App.scss';
 import { Drawable } from './classes/interfaces/Drawable';
@@ -22,6 +22,8 @@ function App(): JSX.Element {
 	const [yDirection] = useState(1);
 	const [overheadDrawables, setOverheadDrawables] = useState<Drawable[]>([camera]);
 	const [povDrawables, setPovDrawables] = useState<Drawable[]>([]);
+	const [displayedFov, setDisplayedFov] = useState(fov);
+	const [displayedResolution, setDisplayedResolution] = useState(cameraResolution);
 
 	const xDirectionRef = useRef(xDirection);
 	xDirectionRef.current = xDirection;
@@ -98,10 +100,36 @@ function App(): JSX.Element {
 		return () => t.stop();
 	}, [])
 
+	const handleFisheyeCorrectionChanged = (event: ChangeEvent<HTMLInputElement>) => {
+		camera.setFisheyeCorrectionEnabled(event.target.checked);
+	}
+
+	const handleFovChanged = (event: ChangeEvent<HTMLInputElement>) => {
+		setDisplayedFov(parseInt(event.target.value));
+		camera.setFov(displayedFov);
+	}
+
+	const handleResolutionChanged = (event: ChangeEvent<HTMLInputElement>) => {
+		setDisplayedResolution(parseInt(event.target.value));
+		camera.setResolution(displayedResolution);
+	}
+
 	return (
 		<div className="App">
 			<Display width={displayWidth} height={displayHeight} drawables={overheadDrawables}></Display>
 			<Display width={displayWidth} height={displayHeight} drawables={povDrawables}></Display>
+			<div>
+				<input type="checkbox" id="fisheye" onChange={handleFisheyeCorrectionChanged} defaultChecked={true}></input>
+				<label htmlFor="fisheye">Enable Fisheye Correction</label>
+			</div>
+			<div>
+				<input type="range" id="fov" onChange={handleFovChanged} defaultValue={fov} min="10" max="360"></input>
+				<label htmlFor="fov">FOV - {displayedFov}</label>
+			</div>
+			<div>
+				<input type="range" id="camera-resolution" onChange={handleResolutionChanged} defaultValue={cameraResolution} min="5" max="500"></input>
+				<label htmlFor="camera-resolution">Camera Resolution - {displayedResolution}</label>
+			</div>
 		</div>
 	);
 }
