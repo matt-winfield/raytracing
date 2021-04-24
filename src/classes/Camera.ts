@@ -98,7 +98,7 @@ export class Camera implements Drawable {
 	}
 
 	private getDistanceFromCameraPlane(ray: CastedRay): number {
-		return ray.distance * Math.cos(toRadians(ray.angle - this.angle));
+		return ray.distance * Math.abs(Math.cos(toRadians(ray.angle - this.angle)));
 	}
 
 	private updateRays(): void {
