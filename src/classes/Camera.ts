@@ -20,6 +20,7 @@ export class Camera implements Drawable {
 	private size: number = 5;
 	private raysToShow: number = 50;
 	private fisheyeCorrection: boolean = true;
+	private verticalScale = 0.25;
 
 	constructor(x: number, y: number, angle: number, fov: number, viewDistance: number, resolution: number, walls: Wall[]) {
 		this.position = new Vector(x, y)
@@ -83,7 +84,8 @@ export class Camera implements Drawable {
 
 				if (distance < this.viewDistance) {
 					const brightness = Math.abs((this.viewDistance - distance) / this.viewDistance);
-					const segment = new Segment(segmentWidth * i, brightness * height, segmentWidth + 1, castRay.color, brightness);
+					const heightScale = this.verticalScale * this.viewDistance / distance;
+					const segment = new Segment(segmentWidth * i, heightScale * height, segmentWidth + 1, castRay.color, brightness);
 					drawables.push(segment);
 				}
 				i++;
