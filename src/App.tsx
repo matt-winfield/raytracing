@@ -38,7 +38,6 @@ function App(): JSX.Element {
 	povDrawablesRef.current = povDrawables;
 
 	const tick = () => {
-
 		if (pressedKeys.includes("ArrowLeft") || pressedKeys.includes("a")) {
 			camera.moveSide(-1);
 		}
@@ -118,6 +117,9 @@ function App(): JSX.Element {
 		<div className="App">
 			<Display width={displayWidth} height={displayHeight} drawables={overheadDrawables}></Display>
 			<Display width={displayWidth} height={displayHeight} drawables={povDrawables}></Display>
+			<div>
+				Use WASD or arrow keys to move. Use Q+E to rotate.
+			</div>
 			<div>
 				<input type="checkbox" id="fisheye" onChange={handleFisheyeCorrectionChanged} defaultChecked={true}></input>
 				<label htmlFor="fisheye">Enable Fisheye Correction</label>
