@@ -93,8 +93,8 @@ export class Camera implements Drawable {
 					const segment = new Segment(segmentWidth * i, heightScale * height, segmentWidth + 1, castRay.color, brightness);
 					drawables.push(segment);
 				}
-				i++;
 			}
+			i++;
 		}
 
 		return drawables;
