@@ -12,7 +12,16 @@ const Display: FunctionComponent<DisplayProps> = (props: DisplayProps) => {
 	const canvas = useRef<HTMLCanvasElement>(null);
 	const [canvasContext, setCanvasContext] = useState<CanvasRenderingContext2D>();
 
-	function redraw(): void {
+	useEffect(() => {
+		if (!canvas || !canvas.current) return;
+
+		const currentContext = canvas.current.getContext("2d");
+		if (currentContext) {
+			setCanvasContext(currentContext);
+		}
+	}, [])
+
+	useEffect(() => {
 		if (!canvasContext) return;
 
 		canvasContext.clearRect(0, 0, props.width, props.height);
@@ -24,19 +33,6 @@ const Display: FunctionComponent<DisplayProps> = (props: DisplayProps) => {
 		for (const drawable of props.drawables) {
 			drawable.draw(canvasContext);
 		}
-	}
-
-	useEffect(() => {
-		if (!canvas || !canvas.current) return;
-
-		const currentContext = canvas.current.getContext("2d");
-		if (currentContext) {
-			setCanvasContext(currentContext);
-		}
-	}, [])
-
-	useEffect(() => {
-		redraw();
 	}, [canvasContext, props.width, props.height, props.drawables])
 
 	return <canvas className="canvas" width={props.width} height={props.height} ref={canvas}></canvas>
