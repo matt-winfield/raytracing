@@ -22,13 +22,14 @@ export class Camera implements Drawable {
 	private fisheyeCorrection: boolean = true;
 	private verticalScale = 0.25;
 
-	constructor(x: number, y: number, angle: number, fov: number, viewDistance: number, resolution: number, walls: Wall[]) {
+	constructor(x: number, y: number, angle: number, fov: number, viewDistance: number, resolution: number, verticalFov: number, walls: Wall[]) {
 		this.position = new Vector(x, y)
 		this.angle = angle;
 		this.walls = walls;
 		this.fov = fov;
 		this.viewDistance = viewDistance;
 		this.resolution = resolution;
+		this.verticalScale = 1 / verticalFov;
 
 		this.updateRays();
 	}
@@ -56,6 +57,10 @@ export class Camera implements Drawable {
 	public setResolution(resolution: number): void {
 		this.resolution = resolution;
 		this.updateRays();
+	}
+
+	public setVerticalFov(fov: number): void {
+		this.verticalScale = 1 / fov;
 	}
 
 	public draw(canvasContext: CanvasRenderingContext2D): void {

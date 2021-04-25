@@ -12,9 +12,10 @@ const displayHeight = 500;
 
 const fov = 60;
 const cameraResolution = 500;
+const verticalFov = 10;
 
 const walls: Wall[] = [];
-const camera = new Camera(displayWidth / 2, displayHeight / 2, 0, fov, Math.max(displayWidth, displayHeight), cameraResolution, walls);
+const camera = new Camera(displayWidth / 2, displayHeight / 2, 0, fov, Math.max(displayWidth, displayHeight), cameraResolution, verticalFov, walls);
 const pressedKeys: string[] = [];
 
 function App(): JSX.Element {
@@ -24,6 +25,7 @@ function App(): JSX.Element {
 	const [povDrawables, setPovDrawables] = useState<Drawable[]>([]);
 	const [displayedFov, setDisplayedFov] = useState(fov);
 	const [displayedResolution, setDisplayedResolution] = useState(cameraResolution);
+	const [displayedVerticalFov, setDisplayedVerticalFov] = useState(verticalFov);
 
 	const xDirectionRef = useRef(xDirection);
 	xDirectionRef.current = xDirection;
@@ -113,6 +115,11 @@ function App(): JSX.Element {
 		camera.setResolution(displayedResolution);
 	}
 
+	const handleVerticalFovChanged = (event: ChangeEvent<HTMLInputElement>) => {
+		setDisplayedVerticalFov(parseInt(event.target.value));
+		camera.setVerticalFov(displayedVerticalFov);
+	}
+
 	return (
 		<div className="App">
 			<Display width={displayWidth} height={displayHeight} drawables={overheadDrawables}></Display>
@@ -131,6 +138,10 @@ function App(): JSX.Element {
 			<div>
 				<input type="range" id="camera-resolution" onChange={handleResolutionChanged} defaultValue={cameraResolution} min="5" max="500"></input>
 				<label htmlFor="camera-resolution">Camera Resolution - {displayedResolution}</label>
+			</div>
+			<div>
+				<input type="range" id="vertical-fov" onChange={handleVerticalFovChanged} defaultValue={verticalFov} min="1" max="50"></input>
+				<label htmlFor="vertical-fov">Vertical FOV - {displayedVerticalFov}</label>
 			</div>
 		</div>
 	);
